@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div id="weather">
+        <div id="top">
+            <div id="date"></div>
+            <div class="sunshine"></div>
+            <div>上海</div>
+        </div>
+        <div id="mid">
+            <div id="crtDay" class="current-day">
+                <div class="today">
+                    <div id="cur-weth-ico" class="bg-weath"></div>
+                    <div class="current-tmp">     
+                        <span>4</span>
+                        <i>℃</i>
+                        <p>多云(实时)</p>
+                    </div>
+                    <div>1-5℃</div>
+                    <div id="weath-info">阴转多云</div>
+                    <div id="wind-info">北风微风</div>
+                    <div id="aqi" class="air-quality">30 优</div>
+                </div>
+            </div>
+            <div class="other-day">
+                <ul>
+                    <li>
+                        <div class="monday">
+                           
+                            <div class="week">周一</div>
+                            <div class="month">12月15日</div>
+                            <div class="bg-weath"></div>
+                            <div class="bg"></div>
+                            <div>1-5℃</div>
+                            <div>多云转晴</div>
+                            <div>无持续风3-4</div>
+                            <div class="air-quality">优</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tuesday">
+                            
+                            <div class="week">周二</div>
+                            <div class="month">12月16日</div>
+                            <div class="bg-weath"></div>
+                            <div class="bg"></div>
+                            <div>3-5℃</div>
+                            <div>多云</div>
+                            <div>无持续风3-4</div>
+                            <div class="air-quality">优</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="wenday">                           
+                            <div class="week">周三</div>
+                            <div class="month">12月17日</div>
+                            <div class="bg-weath"></div>
+                            <div class="bg"></div>
+                            <div>4-8℃</div>
+                            <div>多云转小雨</div>
+                            <div>北风3-4级</div>
+                            <div class="air-quality">良</div>
+                        </div>
+                    </li>
+                    <li id="thurday">
+                        <div class="thurday">                           
+                            <div class="week">周四</div>
+                            <div class="month">12月18日</div>
+                            <div class="bg-weath"></div>
+                            <div class="bg"></div>
+                            <div>5-8℃</div>
+                            <div>小雨</div>
+                            <div>北风3-4级</div>
+                            <div class="air-quality">优</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+       
+        </div>
+        
+        <div id="bottom">
+            <div class="weather-graph">
+                <div class="def-show">24小时温度表</div>
+                <div>风力方向表</div>
+                <div>降水量表</div>
+                <div>相关指数表</div>
+            </div>
+            <div class="temp-wind-rain">
+                <ul>
+                    <li class="current-graph">24小时温度</li>
+                    <li>风力方向</li>
+                    <li>降水量</li>
+                    <li>相关指数</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+ 
+
+
+
+<script>
+
+
+    //   fetch('http://apis.juhe.cn/simpleWeather/query?city=%E4%B8%8A%E6%B5%B7&key=eb32880e6d46c9eaf4950af144a19a99',
+    //   {
+    //       method:'get',
+    //       mode:'no-cors',
+    //       headers:{
+    //         'Access-Control-Allow-Origin':'*',
+    //         "Content-Type":'application/json',
+    //       }
+    //   },
+    //   ).then(function(res){
+    //       console.log(res);
+    //        return res.json()
+    //        //console.log(res)
+    //    }).then(function(data){
+    //        console.log(data);
+    //    })
+
+        var oContent = document.getElementById('content');
+        var aDiv = document.querySelectorAll('.weather-graph div');
+        var aLi = document.querySelectorAll('.temp-wind-rain li')
+        var i =0; aLlen = aLi.length;
+     
+
+     var url = 'http://localhost:3000/api/weather/query';
+   fetch(url).then(function(res){
+        return res.json()
+    }).then(function(data){ 
+            var rltmWeath = data.result.realtime; //获取实时天气
+            console.log(rltmWeath)
+                  
+      var temp = rltmWeath.temperature, hum = rltmWeath.humidity, inf = rltmWeath.info,
+        wind = rltmWeath.wid, winDir = rltmWeath.direct, aqi = rltmWeath.aqi;
+        console.log(aqi);
+        var weathIfo = document.getElementById('weath-info');
+          var oWindIfo = document.getElementById('wind-info');
+          var oAqi = document.getElementById('aqi');
+        weathIfo.innerHTML = inf;
+        oWindIfo.innerHTML = winDir;
+        oAqi.innerHTML = aqi;
+        
+    }) //假装 从服务器拿到数据~~. 根据数据判断天气显示UI;
+
+
+
+
+        
+   
+
+
+
+    //日期
+    function toChn(){
+    var oD = document.getElementById('date');
+    var oW = document.getElementsByClassName('week');
+    var oM = document.getElementsByClassName('month')
+     var oDate = new Date();
+    var m = oDate.getMonth()+1;
+    var d = oDate.getDate();
+    var numChn = ['一', '二', '三', '四', '五', '六','天'];
+    var curD = oDate.getDay();
+    var w = numChn[oDate.getDay()-1];
+
+    oD.innerHTML = `<div>${m}月${d}日 周${w}</div>`;
+        for (var i = 0; i<oW.length; i++){
+            oW[i].innerHTML = `<div>周 ${numChn[(curD++)]}</div>`;
+            oM[i].innerHTML = `<div>${m}月${1+d++}日</div>`
+        }
+    }
+    toChn();
+ 
+
+    var oWeather = document.getElementById('weather');
+    var oCur = document.getElementById('cur-weth-ico');
+    var oThur = document.getElementById('thurday');
+    
+function changeBg(){
+    var oDate = new Date();
+    var h = oDate.getHours();
+
+    if(h >= 6 && h <= 12){
+        oWeather.setAttribute('id', 'weather2'); 
+    }else if (h > 12 && h <= 18){
+    oWeather.setAttribute('id', 'weather1');
+       oCur.setAttribute('class', 'today-w');
+    }else if(h < 24 && h > 18){
+        oWeather.setAttribute('id', 'weather');
+    }
+}
+changeBg();
+
+oThur.onmousemove = function(){
+        oWeather.setAttribute('id','weather3')
+    }
+    oThur.onmouseout = function(){
+        oWeather.setAttribute('id','weather2')
+    }
+    //底部对应天气相关指标
+     for(; i<aLlen;i++){
+        aLi[i].setAttribute('idx',i);
+         aLi[i].onclick = function(e){
+            for(i=0;i<aLlen;i++){
+                aLi[i].className = '';
+            }
+             var eTget = e.target;
+             eTget.className = 'current-graph';
+             var index = this.getAttribute('idx');
+
+             for(var j=0;j<aDiv.length; j++){
+                 aDiv[j].className = '';
+             }
+             aDiv[index].className = 'def-show';
+         }   
+     }
+
+
+
+</script>
+    
+</body>
+</html>
